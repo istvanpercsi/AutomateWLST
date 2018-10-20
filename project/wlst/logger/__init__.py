@@ -9,73 +9,88 @@ Created on 19.10.2018
 class Logger(object):
     '''
     This is a Standard logger class. It logs messages on console based on errorlevel (0-5) and enabled name of class/function.
-    Default error level is: ERROR (4)
+    Default error logLevel is: ERROR (4)
     Default class is: *
     Default function is: *
     '''
        
-    level = 4
+    logLevel = 4
+    logClassFunction = ['*.*']
     
     def __init__(self,nameOfClass,nameOfFunction = ''):
-        self.nameOfClass = nameOfClass
-        self.nameOfFunction = nameOfFunction
+        self.__nameOfClass = nameOfClass
+        self.__nameOfFunction = nameOfFunction
         
     def getInstance(className, functionName = ''):
         return Logger(className, functionName)
-    
     getInstance = staticmethod(getInstance)
     
     def setNameOfFunction(self,nameOfFunction):
-        self.nameOfFunction = nameOfFunction
+        self.__nameOfFunction = nameOfFunction
+        
+    def appendClassFunction(self,cf = '*.*'):
+        if not cf in Logger.logClassFunction:
+            self.logClassFunction.append(cf)
+
+    def removeClassFunction(self,cf):
+        self.logClassFunction.remove(cf)
+        
+    def clearClassFunction(self):
+        self.logClassFunction = []
+    
+    def getClassFunction(self):
+        return self.logClassFunction
         
     def setLogLevel(logLevel):
         if not isinstance(logLevel,str):
             raise ValueError('Parameter \'logLevel\' must be string.')
         if logLevel.lower() == 'trace':
-            Logger.level = 0
+            Logger.logLevel = 0
         elif logLevel.lower() == 'debug':
-            Logger.level = 1
+            Logger.logLevel = 1
         elif logLevel.lower() == 'info':
-            Logger.level = 2
+            Logger.logLevel = 2
         elif logLevel.lower() == 'warn':
-            Logger.level = 3
+            Logger.logLevel = 3
         elif logLevel.lower() == 'error':
-            Logger.level = 4
+            Logger.logLevel = 4
         elif logLevel.lower() == 'fatal':
-            Logger.level = 5
+            Logger.logLevel = 5
         else:
             raise ValueError('Parameter \'logLevel\' must be: trace, debug, info, warn, error, fatal')
             
     setLogLevel = staticmethod(setLogLevel)
             
     def trace(self,message):
-        if self.level == 0:
+        if self.logLevel == 0:
             self.__printMsg('TRACE', message)
             
     def debug(self,message):
-        if self.level <= 1:
+        if self.logLevel <= 1:
             self.__printMsg('DEBUG', message)
     
     def info(self,message):
-        if self.level <= 2:
+        if self.logLevel <= 2:
             self.__printMsg('INFO', message)
     
     def warn(self,message):
-        if self.level <= 3:
+        if self.logLevel <= 3:
             self.__printMsg('WARN', message)
             
     def error(self,message):
-        if self.level <= 4:
+        if self.logLevel <= 4:
             self.__printMsg('ERROR', message)
     
     def fatal(self,message):
-        if self.level <= 5:
+        if self.logLevel <= 5:
             self.__printMsg('FATAL', message)
             
     def __printMsg(self,level,message):
-        fullLogMessage = '['+level+'] ('+self.nameOfClass
-        if self.nameOfFunction != '':
-            fullLogMessage =+ '.' + self.nameOfFunction
-        fullLogMessage =+ '): ' + message
-        print(fullLogMessage)
+        cf = self.__nameOfClass + '.' + self.__nameOfFunction
+        if [x for x in Logger.logClassFunction if x in [cf, '*.*', self.__nameOfClass + '.*']]:
+            fullLogMessage = '['+level+'] ('+self.__nameOfClass
+            if self.__nameOfFunction != '':
+                fullLogMessage += '.' + self.__nameOfFunction
+            fullLogMessage += '): ' + message
+            print(fullLogMessage)
         
