@@ -19,9 +19,13 @@ print(x.x)
 d = {'s':{'t':'V'}}
 x = ExtendedObject(d)
 print(x.s.t)
-x.s = ExtendedObject({'z':{'k':'o','t':'tt'}})
-#x.s.z.k = 'o'
-#x.s.z.t = 'tt'
+x.s.update(ExtendedObject({'z':{'k':'o','t':'tt'}}))
+print(x.s.z.k)
+
+print(x.s.z.t) 
+print(x.s.t)
+
+x.s.update(ExtendedObject({'z':{'k':'i'}}))
 print(x.s.z.k)
 
 print(x.s.z.t) 

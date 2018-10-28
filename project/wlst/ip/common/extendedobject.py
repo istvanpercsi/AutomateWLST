@@ -64,7 +64,7 @@ class ExtendedObject(object):
             if len(keys) > 1:
                 self.logger.trace('There are more rest keys. They are: ' + str(keys[1:]))
                 if isinstance(self.__dict__[keys[0]],ExtendedObject):
-                    self.__dict__[keys[0]].__setattr__('.'.join(keys[1:]),value)
+                    self.__dict__[keys[0]].__setattr__('.'.join(keys[1:]),value,update)
                 else:
                     self.__dict__[keys[0]] = ExtendedObject('.'.join(keys[1:]),value)
             else:
@@ -102,7 +102,7 @@ class ExtendedObject(object):
                     self.logger.trace('Value of parameter \'value\' is not a dictionary.')
                     self.__dict__[keys[0]] = value
         self.logger.setNameOfFunction('')
-            
+    
     
     def __convertDictToExtendedObject(self,d,e):
         self.logger.setNameOfFunction('__convertDictToExtendedObject')
@@ -121,5 +121,16 @@ class ExtendedObject(object):
             self.logger.trace('Key cannot be contain special characters, only english letters and arabic numbers. This key is invalid: \'' + str(key) + '\'')
             raise KeyError('Key cannot be contain special characters, only english letters and arabic numbers. This key is invalid: \'' + str(key) + '\'')
         
+    
+    def update(self,value):
+        if isinstance(value,dict):
+            for k in value:
+                self.__setattr__(k,value[k],True)
+        elif isinstance(value,ExtendedObject):
+            for k in value.__dict__:
+                self.__setattr__(k,value.__dict__[k],True) 
+        else:
+            raise ValueError('Parameter \'value\' must be dictionary or ExtendedObject, but it is ' + str(type(value)))
         
+          
         
