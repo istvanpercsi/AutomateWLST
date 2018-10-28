@@ -165,4 +165,28 @@ class ExtendedObject(object):
                 self.__setattr__(k,value.__dict__[k],True) 
         else:
             raise ValueError('Parameter \'value\' must be dictionary or ExtendedObject, but it is ' + str(type(value)))
+    
+    def setAttr(self,key,value):
+        '''
+        Add attribute to object.
+        @param key: string - key of attribute
+        @param value: mixed - value of attribute
+        '''
+        self.__setattr__(key, value)
+    
+    def getAttr(self,key):
+        '''
+        Get value of attribute of object.
+        @param key: string - key of attribute
+        '''
+        self.__getattr__(key)
         
+    def updAttr(self,key,value):
+        '''
+        Update attribute of object.
+        @param key: string - key of attribute
+        @param value: mixed - value of attribute
+        '''
+        self.__setattr__(key, value, True)
+        
+    
