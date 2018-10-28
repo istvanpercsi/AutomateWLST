@@ -73,15 +73,15 @@ class ExtendedObject(object):
                     self.logger.trace('Value of parameter \'value\' is a dictionary.')
                     if isinstance(self.__dict__[keys[0]],ExtendedObject) and update:
                         self.logger.trace('Value of key \'' + keys[0] + '\' in actual object is an ExtendedObject')
-                        self.__dict__[keys[0]] = self.__convertDictToExtendedObject(value, self.__dict__[keys[0]])
+                        self.__dict__[keys[0]] = self.__convertDictToExtendedObject(value, self.__dict__[keys[0]],update)
                     else:
                         self.logger.trace('Value of key \'' + keys[0] + '\' in actual object is not an ExtendedObject')
-                        self.__dict__[keys[0]] = self.__convertDictToExtendedObject(value, ExtendedObject())
+                        self.__dict__[keys[0]] = self.__convertDictToExtendedObject(value, ExtendedObject(),update)
                 elif isinstance(value,ExtendedObject):
                     self.logger.trace('Value of parameter \'value\' is an ExtendedObject')
                     if isinstance(self.__dict__[keys[0]],ExtendedObject) and update:
                         self.logger.trace('Value of key \'' + keys[0] + '\' in actual object is an ExtendedObject')
-                        self.__dict__[keys[0]] = self.__convertDictToExtendedObject(value.__dict__, self.__dict__[keys[0]])
+                        self.__dict__[keys[0]] = self.__convertDictToExtendedObject(value.__dict__, self.__dict__[keys[0]],update)
                     else:
                         self.logger.trace('Value of key \'' + keys[0] + '\' in actual object is not an ExtendedObject')
                         self.__dict__[keys[0]] = value
@@ -97,20 +97,20 @@ class ExtendedObject(object):
                 self.logger.trace('There is no more rest key. Last key is: ' + str(key))
                 if isinstance(value,dict):
                     self.logger.trace('Value of parameter \'value\' is a dictionary.')
-                    self.__dict__[keys[0]] = self.__convertDictToExtendedObject(value, ExtendedObject())
+                    self.__dict__[keys[0]] = self.__convertDictToExtendedObject(value, ExtendedObject(),update)
                 else:
                     self.logger.trace('Value of parameter \'value\' is not a dictionary.')
                     self.__dict__[keys[0]] = value
         self.logger.setNameOfFunction('')
     
     
-    def __convertDictToExtendedObject(self,d,e):
+    def __convertDictToExtendedObject(self,d,e,update = False):
         self.logger.setNameOfFunction('__convertDictToExtendedObject')
         if not isinstance(e,ExtendedObject):
             raise ValueError('Parameter \'e\' must be ExtendedObject')
         for k in d:
             self.logger.trace('Adding key: \'' + str(k) + '\' - value: \'' + str(d[k]) + '\' to ExtendedObject')
-            e.__setattr__(k, d[k])
+            e.__setattr__(k, d[k],update)
         self.logger.setNameOfFunction('')
         return e
     
