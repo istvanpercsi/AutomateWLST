@@ -117,6 +117,15 @@ class ExtendedObject(object):
                     self.__dict__[keys[0]] = value
         self.logger.setNameOfFunction('')
     
+    def __getattr__(self,key):
+        '''
+        Returns an attribute of this object.
+        @param key: string
+        '''
+        if key not in self.__dict__:
+            raise KeyError('Attribute is not exist: ' + key )
+        return self.__dict__[key]
+    
     def __convertDictToExtendedObject(self,d,e,update = False):
         '''
         Convert or add element of dictionary to __dict__ of ExtendedObject.
