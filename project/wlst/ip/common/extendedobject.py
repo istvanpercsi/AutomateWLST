@@ -12,7 +12,7 @@ class ExtendedObject(object):
     Extended Object - this is an extension for jython base object. 
     This object implements some useful functions. For Example:
     - recursive object creation
-    - recursive object update if input is Extended Object
+    - recursive object update if input is Extended Object or dictionary
     - handle simple dictionary input, in this fall convert it to Extended Object.
     - handle extended object input
     etc.
@@ -39,12 +39,23 @@ class ExtendedObject(object):
             
        
     def __initWithDict(self, attributes):
+        '''
+        Check if attributes is a dictionary, 
+            if yes, then call __setattr__ function with 'attributes'
+            if no, then raise an error
+        @param attributes: dictionary - input parameters
+        '''
         if not isinstance(attributes,dict):
             raise ValueError('Parameter \'attributes\' must be dict')
         for key in attributes:
             self.__setattr__(key,attributes[key])
         
     def __initWithExtendedObject(self,attributes):
+        '''
+        Check if attributes is an ExtendedObject,
+            if yes, then call __setattr__ funciton with a __dict__ parameter of 'attributes'
+            if no, then raise an error
+        '''
         if not isinstance(attributes,ExtendedObject):
             raise ValueError('Parameter \'attributes\' must be ExtendedObject')
         for key in attributes.__dict__:
@@ -53,7 +64,9 @@ class ExtendedObject(object):
     
     def __setattr__(self, key, value, update = False):
         '''
-        __setattr__ function of object. With this extension it can process point separated keys
+        __setattr__ function of object. With this extension it can process point separated keys, and update actual values recursively.
+        @param key: string - key of value
+        @param value: mixed - value
         '''
         self.logger.setNameOfFunction('__setattr__')
         self.__testKeyValidity(key)
@@ -105,6 +118,12 @@ class ExtendedObject(object):
     
     
     def __convertDictToExtendedObject(self,d,e,update = False):
+        '''
+        Convert or add element of dictionary to __dict__ of ExtendedObject.
+        @param d: dictionary
+        @param e: ExtendedObject
+        @param update: True|False redirect to __setattr__ 
+        '''
         self.logger.setNameOfFunction('__convertDictToExtendedObject')
         if not isinstance(e,ExtendedObject):
             raise ValueError('Parameter \'e\' must be ExtendedObject')
@@ -115,6 +134,10 @@ class ExtendedObject(object):
         return e
     
     def __testKeyValidity(self,key):
+        '''
+        Check if the key valid or not. A valid key can contain only english letters and arabic numbers.
+        @param key: string
+        '''
         regexPattern = '^[a-zA-Z]?[a-zA-Z0-9\.]*$'
         compliedRegex = re.compile(regexPattern)
         if not compliedRegex.match(key):
@@ -123,6 +146,10 @@ class ExtendedObject(object):
         
     
     def update(self,value):
+        '''
+        Update this object with 'value' The 'value' can be dictionary or ExtendedObject.
+        @param value: mixed: dict|ExtendedObject
+        '''
         if isinstance(value,dict):
             for k in value:
                 self.__setattr__(k,value[k],True)
