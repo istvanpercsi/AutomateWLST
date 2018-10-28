@@ -25,6 +25,7 @@ class ExtendedObject(object):
         1, convert dict input to an Extended Object
         2, init this object with values of external ExtendedObject. !!!WARNING!!! ONLY WITH VALUES !!!WARNING!!!
         '''
+        self.logger.setNameOfFunction('__init__')
         try:
             self.__initWithDict(attributes)
             self.logger.trace('Parameter \'attributes\' is a dictionary')
@@ -36,6 +37,7 @@ class ExtendedObject(object):
             except ValueError, e:
                 self.logger.trace('Parameter \'attributes\' is not an ExtendedObject.' + str(e))
                 raise ValueError('Parameter \'attributes\' must be dictionary or ExtendedObject, but it is '+str(type(attributes)))
+        self.logger.setNameOfFunction('')
             
        
     def __initWithDict(self, attributes):
@@ -61,7 +63,6 @@ class ExtendedObject(object):
         for key in attributes.__dict__:
             self.__setattr__(key,attributes.__dict__[key])
             
-    
     def __setattr__(self, key, value, update = False):
         '''
         __setattr__ function of object. With this extension it can process point separated keys, and update actual values recursively.
@@ -116,7 +117,6 @@ class ExtendedObject(object):
                     self.__dict__[keys[0]] = value
         self.logger.setNameOfFunction('')
     
-    
     def __convertDictToExtendedObject(self,d,e,update = False):
         '''
         Convert or add element of dictionary to __dict__ of ExtendedObject.
@@ -141,10 +141,8 @@ class ExtendedObject(object):
         regexPattern = '^[a-zA-Z]?[a-zA-Z0-9\.]*$'
         compliedRegex = re.compile(regexPattern)
         if not compliedRegex.match(key):
-            self.logger.trace('Key cannot be contain special characters, only english letters and arabic numbers. This key is invalid: \'' + str(key) + '\'')
             raise KeyError('Key cannot be contain special characters, only english letters and arabic numbers. This key is invalid: \'' + str(key) + '\'')
         
-    
     def update(self,value):
         '''
         Update this object with 'value' The 'value' can be dictionary or ExtendedObject.
@@ -158,6 +156,4 @@ class ExtendedObject(object):
                 self.__setattr__(k,value.__dict__[k],True) 
         else:
             raise ValueError('Parameter \'value\' must be dictionary or ExtendedObject, but it is ' + str(type(value)))
-        
-          
         
