@@ -2,10 +2,30 @@ import sys
 
 from ip.common.common import Common
 from ip.common.extendedobject import ExtendedObject
+from ip.logger.logger import Logger
 
-x = ExtendedObject()
 
+Logger.setLogLevel('trace')
 
+d = dict()
+d['x.y'] = 'z'
+x = ExtendedObject(d)
+print(x.x.y)
+x.k = 'f'
+print(x.k)
+x.x = 'z'
+print(x.x)
+
+d = {'s':{'t':'V'}}
+x = ExtendedObject(d)
+print(x.s.t)
+x.s = ExtendedObject({'z':{'k':'o','t':'tt'}})
+#x.s.z.k = 'o'
+#x.s.z.t = 'tt'
+print(x.s.z.k)
+
+print(x.s.z.t) 
+print(x.s.t)
 
 
 
