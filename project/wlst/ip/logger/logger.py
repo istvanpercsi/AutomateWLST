@@ -17,7 +17,7 @@ class Logger(object):
     '''
        
     logLevel = 4
-    logClassFunction = ['*.*']
+    loggedClassAndFunction = ['*.*']
     
     def __init__(self,nameOfInvokerClass):
         self.__nameOfClass = nameOfInvokerClass
@@ -28,18 +28,18 @@ class Logger(object):
     
     getInstance = staticmethod(getInstance)
         
-    def appendClassFunction(self,cf = '*.*'):
-        if not cf in Logger.logClassFunction:
-            self.logClassFunction.append(cf)
+    def appendToLoggedClassAndFunction(self,cf = '*.*'):
+        if not cf in Logger.loggedClassAndFunction:
+            self.loggedClassAndFunction.append(cf)
 
-    def removeClassFunction(self,cf):
-        self.logClassFunction.remove(cf)
+    def removeFromLoggedClassAndFunction(self,cf):
+        self.loggedClassAndFunction.remove(cf)
         
-    def clearClassFunction(self):
-        self.logClassFunction = []
+    def clearLoggedClassAndFunction(self):
+        self.loggedClassAndFunction = []
     
-    def getClassFunction(self):
-        return self.logClassFunction
+    def getListOfLoggedClassAndFunction(self):
+        return self.loggedClassAndFunction
         
     def setLogLevel(logLevel):
         if not isinstance(logLevel,str):
@@ -93,7 +93,7 @@ class Logger(object):
             
     def __printMsg(self,level,message):
         cf = self.__nameOfClass + '.' + self.__nameOfFunction
-        if [x for x in Logger.logClassFunction if x in [cf, '*.*', self.__nameOfClass + '.*']]:
+        if [x for x in Logger.loggedClassAndFunction if x in [cf, '*.*', self.__nameOfClass + '.*']]:
             fullLogMessage = '['+level+'] ('+self.__nameOfClass
             if self.__nameOfFunction != '':
                 fullLogMessage += '.' + self.__nameOfFunction
