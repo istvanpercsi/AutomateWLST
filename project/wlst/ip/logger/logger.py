@@ -6,6 +6,8 @@ Created on 19.10.2018
 @license: MIT
 '''
 
+import sys
+
 class Logger(object):
     '''
     This is a Standard logger class. It logs messages on console based on errorlevel (0-5) and enabled name of class/function.
@@ -17,16 +19,14 @@ class Logger(object):
     logLevel = 4
     logClassFunction = ['*.*']
     
-    def __init__(self,nameOfClass,nameOfFunction = ''):
-        self.__nameOfClass = nameOfClass
-        self.__nameOfFunction = nameOfFunction
+    def __init__(self,nameOfInvokerClass):
+        self.__nameOfClass = nameOfInvokerClass
+        self.__nameOfFunction = ''
         
-    def getInstance(className, functionName = ''):
-        return Logger(className, functionName)
-    getInstance = staticmethod(getInstance)
+    def getInstance():
+        return Logger(sys._getframe().f_back.f_locals['self'].__class__.__name__)
     
-    def setNameOfFunction(self,nameOfFunction):
-        self.__nameOfFunction = nameOfFunction
+    getInstance = staticmethod(getInstance)
         
     def appendClassFunction(self,cf = '*.*'):
         if not cf in Logger.logClassFunction:
@@ -62,26 +62,32 @@ class Logger(object):
     setLogLevel = staticmethod(setLogLevel)
             
     def trace(self,message):
+        self.__nameOfFunction = sys._getframe().f_back.f_code.co_name
         if self.logLevel == 0:
             self.__printMsg('TRACE', message)
             
     def debug(self,message):
+        self.__nameOfFunction = sys._getframe().f_back.f_code.co_name
         if self.logLevel <= 1:
             self.__printMsg('DEBUG', message)
     
     def info(self,message):
+        self.__nameOfFunction = sys._getframe().f_back.f_code.co_name
         if self.logLevel <= 2:
             self.__printMsg('INFO', message)
     
     def warn(self,message):
+        self.__nameOfFunction = sys._getframe().f_back.f_code.co_name
         if self.logLevel <= 3:
             self.__printMsg('WARN', message)
             
     def error(self,message):
+        self.__nameOfFunction = sys._getframe().f_back.f_code.co_name
         if self.logLevel <= 4:
             self.__printMsg('ERROR', message)
     
     def fatal(self,message):
+        self.__nameOfFunction = sys._getframe().f_back.f_code.co_name
         if self.logLevel <= 5:
             self.__printMsg('FATAL', message)
             
