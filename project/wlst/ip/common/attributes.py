@@ -12,10 +12,13 @@ class Attributes(ExtendedObject):
     Attributes Object. This is an extension for Extended Object.
     This object can process key value list from properties file, or comma or semicolon separated list.
     '''
-
-    logger = Logger.getInstance('Attributes')
+    def __init__(self, attributes=dict()):
+        ExtendedObject.__init__(self, attributes=attributes)
+        self.logger = Logger.getInstance()
+    
 
     def readAttributesFromFile(self,fileName):
+        self.logger.setNameOfFunction('readAttributesFromFile')
         self.logger.trace('Filename: ' + str(fileName))
         attributesFile = open(fileName)
         attributesList = list()
@@ -27,17 +30,19 @@ class Attributes(ExtendedObject):
                 self.logger.trace('Valid property line: ' + str(attributeLine))  
                 attributesList.append(attributeLine)
         self.__processAttributesList(attributesList)
+        self.logger.setNameOfFunction('')
     
     def readAttributesFromSeparatedKeyValueList(self,separatedKeyValueList):
         attributesList = re.split(r'[,;]+', separatedKeyValueList)
         self.__processAttributesList(attributesList)
         
     def __processAttributesList(self,attributesList):
+        self.logger.setNameOfFunction('__processAttributesList')
         self.logger.trace(str(attributesList))
         for attribute in attributesList:
             keyValuePair = re.split(r'[:=]+', attribute)
-            self.logger.trace('Key-Value: ' + str(keyValuePair))
+            self.logger.trace('Key-Value pair: ' + str(keyValuePair))
             self.__setattr__(str(keyValuePair[0]).strip(), str(keyValuePair[1]).strip(), True)
-        
+        self.logger.setNameOfFunction('')
         
         
