@@ -7,7 +7,11 @@ from ip.logger.logger import Logger
 
 class Common(object):
     
-    log = Logger.getInstance('Common')
+    
+    
+    def __init__(self):
+        self.logger = Logger.getInstance()
+
     
     def toBoolean(booleanString):
         if booleanString.lower() == 'yes' or booleanString.lower() == 'true' or str(booleanString) == '1':

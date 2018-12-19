@@ -1,0 +1,5 @@
+<upgrade-log>
+  <entry time="2018-12-19 19:06:19 UTC">
+    <upgrade-participant pluginId="oracle.eclipse.tools.weblogic.scripting" pluginVersion="17.2.0.201806071916" class="oracle.eclipse.tools.weblogic.scripting.internal.WlstProjectImportUpgradeParticipant"/>
+  </entry>
+</upgrade-log>

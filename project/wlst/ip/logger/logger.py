@@ -6,6 +6,8 @@ Created on 19.10.2018
 @license: MIT
 '''
 
+import sys
+
 class Logger(object):
     '''
     This is a Standard logger class. It logs messages on console based on errorlevel (0-5) and enabled name of class/function.
@@ -15,31 +17,29 @@ class Logger(object):
     '''
        
     logLevel = 4
-    logClassFunction = ['*.*']
+    loggedClassAndFunction = ['*.*']
     
-    def __init__(self,nameOfClass,nameOfFunction = ''):
-        self.__nameOfClass = nameOfClass
-        self.__nameOfFunction = nameOfFunction
+    def __init__(self,nameOfInvokerClass):
+        self.__nameOfClass = nameOfInvokerClass
+        self.__nameOfFunction = ''
         
-    def getInstance(className, functionName = ''):
-        return Logger(className, functionName)
+    def getInstance():
+        return Logger(sys._getframe().f_back.f_locals['self'].__class__.__name__)
+    
     getInstance = staticmethod(getInstance)
-    
-    def setNameOfFunction(self,nameOfFunction):
-        self.__nameOfFunction = nameOfFunction
         
-    def appendClassFunction(self,cf = '*.*'):
-        if not cf in Logger.logClassFunction:
-            self.logClassFunction.append(cf)
+    def appendToLoggedClassAndFunction(self,cf = '*.*'):
+        if not cf in Logger.loggedClassAndFunction:
+            self.loggedClassAndFunction.append(cf)
 
-    def removeClassFunction(self,cf):
-        self.logClassFunction.remove(cf)
+    def removeFromLoggedClassAndFunction(self,cf):
+        self.loggedClassAndFunction.remove(cf)
         
-    def clearClassFunction(self):
-        self.logClassFunction = []
+    def clearLoggedClassAndFunction(self):
+        self.loggedClassAndFunction = []
     
-    def getClassFunction(self):
-        return self.logClassFunction
+    def getListOfLoggedClassAndFunction(self):
+        return self.loggedClassAndFunction
         
     def setLogLevel(logLevel):
         if not isinstance(logLevel,str):
@@ -62,32 +62,38 @@ class Logger(object):
     setLogLevel = staticmethod(setLogLevel)
             
     def trace(self,message):
+        self.__nameOfFunction = sys._getframe().f_back.f_code.co_name
         if self.logLevel == 0:
             self.__printMsg('TRACE', message)
             
     def debug(self,message):
+        self.__nameOfFunction = sys._getframe().f_back.f_code.co_name
         if self.logLevel <= 1:
             self.__printMsg('DEBUG', message)
     
     def info(self,message):
+        self.__nameOfFunction = sys._getframe().f_back.f_code.co_name
         if self.logLevel <= 2:
             self.__printMsg('INFO', message)
     
     def warn(self,message):
+        self.__nameOfFunction = sys._getframe().f_back.f_code.co_name
         if self.logLevel <= 3:
             self.__printMsg('WARN', message)
             
     def error(self,message):
+        self.__nameOfFunction = sys._getframe().f_back.f_code.co_name
         if self.logLevel <= 4:
             self.__printMsg('ERROR', message)
     
     def fatal(self,message):
+        self.__nameOfFunction = sys._getframe().f_back.f_code.co_name
         if self.logLevel <= 5:
             self.__printMsg('FATAL', message)
             
     def __printMsg(self,level,message):
         cf = self.__nameOfClass + '.' + self.__nameOfFunction
-        if [x for x in Logger.logClassFunction if x in [cf, '*.*', self.__nameOfClass + '.*']]:
+        if [x for x in Logger.loggedClassAndFunction if x in [cf, '*.*', self.__nameOfClass + '.*']]:
             fullLogMessage = '['+level+'] ('+self.__nameOfClass
             if self.__nameOfFunction != '':
                 fullLogMessage += '.' + self.__nameOfFunction
