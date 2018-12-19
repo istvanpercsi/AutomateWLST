@@ -65,7 +65,7 @@ class WLBasicAttribute(ExtendedObject):
             self.logger.error('Value of parameter \'name\' must be string.')
     
     def getName(self):
-        return self.__name
+        return self.__name 
     
     def setValue(self, value):
         self.__value = value
