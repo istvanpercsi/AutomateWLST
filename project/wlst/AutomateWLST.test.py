@@ -6,6 +6,8 @@ from ip.logger.logger import Logger
 from ip.common.attributes import Attributes
 from ip.wl.err.common.activationfailederror import ActivationFailedError
 from ip.wl.err.common.connectionfailederror import ConnectionFailedError
+from ip.wl.wlcommon import WLCommon
 
+Logger.setLogLevel('trace')
 
-raise ConnectionFailedError('Connection has been failed.')
+WLCommon.connect("weblogic","Weblogic1","t3://localhost:7001")
