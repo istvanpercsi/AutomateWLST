@@ -7,7 +7,8 @@ from ip.common.attributes import Attributes
 from ip.wl.err.common.activationfailederror import ActivationFailedError
 from ip.wl.err.common.connectionfailederror import ConnectionFailedError
 from ip.wl.wlcommon import WLCommon
+from ip.wl.err.common.resourcecouldnotbestartederror import ResourceCouldNotBeStartedError
 
 Logger.setLogLevel('trace')
-
-WLCommon.connect("weblogic","Weblogic1","t3://localhost:7001")
+raise ResourceCouldNotBeStartedError('Resource busy')
+#WLCommon.connect("weblogic","Weblogic1","t3://localhost:7001")
