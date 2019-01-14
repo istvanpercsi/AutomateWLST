@@ -3,7 +3,7 @@ Created on 21.12.2018
 
 @author: Istvan Percsi
 '''
-from ip.wl.err.wlCommonError import WLCommonError
+from ip.wl.err.wlcommonerror import WLCommonError
 
 class ResourceCouldNotBeStartedError(WLCommonError):
     '''

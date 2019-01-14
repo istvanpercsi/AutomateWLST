@@ -121,7 +121,7 @@ class ExtendedObject(object):
         Check if the key valid or not. A valid key can contain only english letters and arabic numbers.
         @param key: string
         '''
-        regexPattern = '^[a-zA-Z]?[a-zA-Z0-9\.]*$'
+        regexPattern = '^[a-zA-Z_]?[a-zA-Z0-9\._]*$'
         compliedRegex = re.compile(regexPattern)
         if not compliedRegex.match(key):
             raise KeyError('Key cannot be contain special characters, only english letters and arabic numbers. This key is invalid: \'' + str(key) + '\'')

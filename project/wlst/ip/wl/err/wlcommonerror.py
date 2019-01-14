@@ -3,7 +3,7 @@ Created on 20.12.2018
 
 @author: Istvan Percsi
 '''
-from ip.wl.err.wlBasicError import WLBasicError
+from ip.wl.err.wlbasicerror import WLBasicError
 
 
 class WLCommonError(WLBasicError):
