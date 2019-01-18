@@ -1,44 +1,23 @@
 '''
 Created on 25.12.2018
 
-@author: istva
+@author: Istvan Percsi
 '''
 from ip.common.extendedobject import ExtendedObject
 from ip.logger.logger import Logger
-from ip.common.attributes import Attributes
 
 class WLBasicResource(ExtendedObject):
     
-    def __init__(self, *args, **kwargs):
+    def __init__(self, nameOfResource, typeOfResource, keyOfResource = 'all', attributes = ExtendedObject()):
         self.logger = Logger.getInstance()
+        self.__changeCompleted = 0
+        self.__wlAttributesObject = ExtendedObject()
         
-        if 'nameOfResource' in kwargs:
-            self.setNameOfResource(kwargs['nameOfResource'])
-        elif len(args) >= 1:
-            self.setNameOfResource(args[0])
-        else:
-            raise ValueError('Parameter \'nameOfResource\' must be set')
+        self.setNameOfResource(nameOfResource)
+        self.setTypeOfResource(typeOfResource)
+        self.setKeyOfResource(keyOfResource)
+        self.setAttributes(attributes)
         
-        if 'typeOfResource' in kwargs:
-            self.setTypeOfResource(kwargs['typeOfResource'])
-        elif len(args) >= 2:
-            self.setTypeOfResource(args[1])
-        else:
-            raise ValueError('Parameter \'typeOfResource\' must be set')
-        
-        if 'keyOfResource' in kwargs:
-            self.__keyOfResource = kwargs['keyOfResource']
-        elif len(args) >= 3:
-            self.__keyOfResource = args[2]
-        else:
-            self.__keyOfResource = 'all'
-        
-        if 'attributes' in kwargs:
-            self.__attributes = kwargs['attributes']
-        elif len(args) >= 4:
-            self.__attributes = args[3]
-        else:
-            self.__attributes = ExtendedObject()
     
     def setNameOfResource(self,nameOfResource):
         if isinstance(nameOfResource,str):
@@ -54,4 +33,36 @@ class WLBasicResource(ExtendedObject):
             self.__typeOfResource = typeOfResource
         else:
             raise ValueError('Parameter \'typeOfResource\' must be string.')
-            
+    
+    def getTypeOfResource(self):
+        return self.__typeOfResource
+    
+    def setKeyOfResource(self,keyOfResource):
+        if isinstance(keyOfResource,str):
+            self.__keyOfResource = keyOfResource
+        else:
+            raise ValueError('Parameter \'keyOfResource\' must be string.')
+    
+    def getKeyOfResource(self):
+        return self.__keyOfResource
+    
+    def setAttributes(self, attributes):
+        if isinstance(attributes,ExtendedObject):
+            self.__attributes = attributes
+        else:
+            raise ValueError('Parameter \'attributes\' must be ExtendedObject.')
+    
+    def getChangeCompleted(self):
+        return self.__changeCompleted
+    
+    def inceraseChangeCompleted(self):
+        self.__changeCompleted =+ 1
+        
+    def convertAttributesObjectToWLAttributesObject(self):
+        self.convertAttrObjToWLAttrObj()
+    
+    def convertAttrObjToWLAttrObj(self):
+        raise NotImplementedError('Not yet implemented.')
+        
+        
+        
