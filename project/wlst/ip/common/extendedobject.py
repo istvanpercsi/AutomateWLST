@@ -18,7 +18,7 @@ class ExtendedObject(object):
     etc.
     '''
 
-    def __init__(self,attributes = dict()):
+    def __init__(self,options = dict()):
         '''
         Constructor it has two function
         1, convert dict input to an Extended Object
@@ -26,12 +26,12 @@ class ExtendedObject(object):
         '''
         self.logger = Logger.getInstance()
         try:
-            self.__initWithDict(attributes)
+            self.__initWithDict(options)
         except ValueError:
             try:
-                self.__initWithExtendedObject(attributes)
+                self.__initWithExtendedObject(options)
             except ValueError:
-                raise ValueError('Parameter \'attributes\' must be dictionary or ExtendedObject, but it is '+str(type(attributes)))
+                raise ValueError('Parameter \'options\' must be dictionary or ExtendedObject, but it is '+str(type(options)))
             
        
     def __initWithDict(self, attributes):
