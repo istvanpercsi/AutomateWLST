@@ -13,4 +13,4 @@ Logger.setLogLevel('trace')
 #WLCommon.connect("weblogic","Weblogic1","t3://localhost:7001")
 
 x = WLBasicResource('test','test2')
-print (x.getNameOfResource())
+x.setAttributesInWL()

@@ -3,6 +3,7 @@ Created on 25.12.2018
 
 @author: Istvan Percsi
 '''
+import re
 import wlstModule as wlst
 
 from ip.common.extendedobject import ExtendedObject
@@ -19,6 +20,8 @@ class WLBasicResource(ExtendedObject):
         self.setTypeOfResource(typeOfResource)
         self.setKeyOfResource(keyOfResource)
         self.setOptions(options)
+        
+        self.checkExistanceOfResourceInWL()
         
     
     def setNameOfResource(self,nameOfResource):
@@ -38,6 +41,9 @@ class WLBasicResource(ExtendedObject):
     
     def getTypeOfResource(self):
         return self.__typeOfResource
+    
+    def getTypeOfResources(self):
+        return re.sub(r'y$','ie',self.__typeOfResource) + 's'
     
     def setKeyOfResource(self,keyOfResource):
         if isinstance(keyOfResource,str):
@@ -59,9 +65,9 @@ class WLBasicResource(ExtendedObject):
             except KeyError, e:
                 self.logger.debug('FailIf options do not defined. ' + str(e))
             try:
-                self.__update = options.update
+                self.__edit = options.edit
             except KeyError, e:
-                self.logger.debug('Update options do not defined. ' + str(e))
+                self.logger.debug('Edit options do not defined. ' + str(e))
             try:
                 self.__mbeanPaths = options.mbeanPaths
             except KeyError, e:
@@ -69,18 +75,53 @@ class WLBasicResource(ExtendedObject):
         else:
             raise ValueError('Parameter \'options\' must be ExtendedObject.')
     
+    def getOptionEditEnabled(self):
+        try:
+            return self.__edit.enabled
+        except KeyError, e:
+            self.logger.debug('Key: self.__edit.enabled has not been set. Return with false. ' + str(e))
+            return False
+            
+    
+    def checkExistanceOfResourceInWL(self):
+        try:
+            self.logger.debug('Check existance of resource \'' + self.getNameOfResource() + '\' in WebLogic. ')
+            self.logger.trace('Command: cd edit:/' + self.getTypeOfResources() + '/' + self.getNameOfResource())
+            wlst.cd('edit:/' + self.getTypeOfResources() + '/' + self.getNameOfResource())
+            wlst.cd('/')
+            self.__existsInWeblogic = True
+            self.logger.debug('Resource \'' + self.getTypeOfResource() + '\' with name \'' + self.getNameOfResource() + '\' exists in Weblogic')
+        except:
+            self.__existsInWeblogic = False
+            self.log.debug('Resource \'' + self.getTypeOfResource() + '\' with name \'' + self.getNameOfResource() + '\' does not exist in Weblogic')
+    
+    def getExistsInWeblogic(self):
+        return self.__existsInWeblogic
+    
     def getChangeCompleted(self):
         return self.__changeCompleted
     
     def inceraseChangeCompleted(self):
         self.__changeCompleted =+ 1
         
-    def convertAttributesObjectToWLAttributesObject(self):
-        self.convertAttrObjToWLAttrObj()
+    def convertAttributesObjectToMBeanPaths(self):
+        self.convertAttrObjToMBeanPath()
     
-    def convertAttrObjToWLAttrObj(self):
+    def convertAttrObjToMBeanPath(self):
         raise NotImplementedError('Not yet implemented.')
         
     def setAttributesInWL(self):
-        wlst.cd('/')
+        wlst.cd('edit:/')
+        if self.getExistsInWeblogic() and self.getOptionEditEnabled():
+            self.logger.debug('Resource with name exists in WebLogic, and edit is enabled. Editing attributes of resource...')
+            #todo edit
+        elif not self.getExistsInWeblogic() and self.getOptionEditEnabled():
+            self.logger.debug('Resource with name does not exist in WebLoic, but edit is enabled. Create new resource...')
+            #tod create
+        elif self.getExistsInWeblogic() and self.getOptionEditEnabled():
+            self.logger.debug('Resource with name exists in Weblogic but edit is not enabled. Exiting...')
+        elif not self.getExistsInWeblogic() and not self.getOptionEditEnabled():
+            self.logger.debug('Resource with name does not exist in WebLogic, and edit is not enabled. Exiting...')
+        
+        
         
