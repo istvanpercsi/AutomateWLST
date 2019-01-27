@@ -10,3 +10,4 @@ class WLResourceTypes(object):
     '''
     SERVER          = 'Server'
     CLUSTER         = 'Cluster'
+    DATASOURCE      = 'Datasource'
