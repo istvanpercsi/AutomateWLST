@@ -8,20 +8,21 @@ import wlstModule as wlst
 
 from ip.common.extendedobject import ExtendedObject
 from ip.logger.logger import Logger
+from ip.common.common import Common
+from ip.wl.res.mbeanpaths import MBeanPaths
 
 class WLBasicResource(ExtendedObject):
     
     def __init__(self, nameOfResource, typeOfResource, keyOfResource = 'all', options = ExtendedObject()):
         self.logger = Logger.getInstance()
         self.__changeCompleted = 0
-        self.__mbeanPaths = ExtendedObject()
         
         self.setNameOfResource(nameOfResource)
         self.setTypeOfResource(typeOfResource)
         self.setKeyOfResource(keyOfResource)
         self.setOptions(options)
         
-        self.checkExistanceOfResourceInWL()
+        #self.checkExistanceOfResourceInWL()
         
     
     def setNameOfResource(self,nameOfResource):
@@ -65,23 +66,29 @@ class WLBasicResource(ExtendedObject):
             except KeyError, e:
                 self.logger.debug('FailIf options do not defined. ' + str(e))
             try:
-                self.__edit = options.edit
+                self.__editMethod = options.editMethod
             except KeyError, e:
                 self.logger.debug('Edit options do not defined. ' + str(e))
             try:
-                self.__mbeanPaths = options.mbeanPaths
+                self.__mbeanPaths = MBeanPaths(options.mbeanPaths)
             except KeyError, e:
                 self.logger.debug('MbeanPaths options do not defined. ' + str(e))
         else:
             raise ValueError('Parameter \'options\' must be ExtendedObject.')
     
-    def getOptionEditEnabled(self):
+    def getOptionUpdateEnabled(self):
         try:
-            return self.__edit.enabled
+            return Common.toBoolean(self.__editMethod.updateEnabled)
         except KeyError, e:
-            self.logger.debug('Key: self.__edit.enabled has not been set. Return with false. ' + str(e))
-            return False
+            self.logger.debug('Key: self.__editMethod.updateEnabled has not been set. Return with true. ' + str(e))
+            return True
             
+    def getOptionCreateEnabled(self):
+        try:
+            return Common.toBoolean(self.__editMethod.createEnabled)
+        except KeyError, e:
+            self.logger.debug('Key: self.__editMethod.createEnabled has not been set. Return with true. ' + str(e))
+            return True
     
     def checkExistanceOfResourceInWL(self):
         try:
