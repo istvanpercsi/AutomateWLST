@@ -18,7 +18,6 @@ class Attributes(ExtendedObject):
     
 
     def readAttributesFromFile(self,fileName):
-        self.logger.setNameOfFunction('readAttributesFromFile')
         self.logger.trace('Filename: ' + str(fileName))
         attributesFile = open(fileName)
         attributesList = list()
@@ -30,19 +29,16 @@ class Attributes(ExtendedObject):
                 self.logger.trace('Valid property line: ' + str(attributeLine))  
                 attributesList.append(attributeLine)
         self.__processAttributesList(attributesList)
-        self.logger.setNameOfFunction('')
     
     def readAttributesFromSeparatedKeyValueList(self,separatedKeyValueList):
         attributesList = re.split(r'[,;]+', separatedKeyValueList)
         self.__processAttributesList(attributesList)
         
     def __processAttributesList(self,attributesList):
-        self.logger.setNameOfFunction('__processAttributesList')
         self.logger.trace(str(attributesList))
         for attribute in attributesList:
-            keyValuePair = re.split(r'[:=]+', attribute)
+            keyValuePair = re.split(r'[:=]+', attribute,1)
             self.logger.trace('Key-Value pair: ' + str(keyValuePair))
             self.__setattr__(str(keyValuePair[0]).strip(), str(keyValuePair[1]).strip(), True)
-        self.logger.setNameOfFunction('')
         
         
