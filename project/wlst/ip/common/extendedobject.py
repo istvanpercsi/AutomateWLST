@@ -162,5 +162,35 @@ class ExtendedObject(object):
         @param value: mixed - value of attribute
         '''
         self.__setattr__(key, value, True)
-        
     
+    def iterEOItems(self):
+        '''
+        Returns with an iterate object of properties of Extended-object, (key and value)
+        '''
+        items = dict()
+        for key, value in self.__dict__.iteritems():
+            if isinstance(value,ExtendedObject):
+                items[key] = value
+        return items.iteritems()
+    
+    def iterEOKeys(self):
+        '''
+        Returns with an iterate object of names of properties of Extended-object
+        '''
+        keys = list()
+        for key, value in self.__dict__.iteritems():
+            if isinstance(value,ExtendedObject):
+                keys.append(key)
+        return keys
+    
+    def iterEOValues(self):
+        '''
+        Returns with an iterate object of values of properties of Extended-object
+        '''
+        values = list()
+        for value in self.__dict__.itervalues():
+            if isinstance(value,ExtendedObject):
+                values.append(value)
+        return values
+        
+        
