@@ -43,9 +43,6 @@ class WLBasicResource(ExtendedObject):
     def getTypeOfResource(self):
         return self.__typeOfResource
     
-    def getTypeOfResources(self):
-        return re.sub(r'y$','ie',self.__typeOfResource) + 's'
-    
     def setKeyOfResource(self,keyOfResource):
         if isinstance(keyOfResource,str):
             self.__keyOfResource = keyOfResource
