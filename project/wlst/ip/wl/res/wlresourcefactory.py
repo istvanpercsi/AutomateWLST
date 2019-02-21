@@ -11,9 +11,9 @@ class WLResourceFactory(ExtendedObject):
     '''
     WLResourceFactory - this class will create resources from Attribute object.
     '''
-
     def createResources(resources,typeOfResource = None):
         logger = Logger('WLResourceFactory')
+        resourcesList = list()
         for resKey,resValue in resources.iterEOItems():
             if typeOfResource == None or str(resKey).lower() == str(WLResourceTypes.getTypeOfResources(typeOfResource)).lower():
                 if str(resKey).lower() == str(WLResourceTypes.getTypeOfResources(WLResourceTypes.CLUSTER)).lower():
@@ -29,6 +29,7 @@ class WLResourceFactory(ExtendedObject):
                 else:
                     logger.debug('Key: ' + str(resKey))
                     logger.debug('Type: ' + str(type(resValue)))
+        return resourcesList
 
     createResources = staticmethod(createResources)
 
