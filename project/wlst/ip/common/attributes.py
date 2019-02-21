@@ -37,8 +37,47 @@ class Attributes(ExtendedObject):
     def __processAttributesList(self,attributesList):
         self.logger.trace(str(attributesList))
         for attribute in attributesList:
-            keyValuePair = re.split(r'[:=]+', attribute,1)
+            keyValuePair = re.split(r'[:=\s]+', attribute,1)
             self.logger.trace('Key-Value pair: ' + str(keyValuePair))
-            self.__setattr__(str(keyValuePair[0]).strip(), str(keyValuePair[1]).strip(), True)
+            self.__setattr__(str(keyValuePair[0]).strip(), self.__convertValueToDataSequence(str(keyValuePair[1]).strip()), True)
+    
+    def __convertValueToDataSequence(self,value):
+        try:
+            return self.__convertToBoolean(value)
+        except:
+            try:
+                return self.__convertToInteger(value)
+            except:
+                try:
+                    return self.__convertToString(value)
+                except:
+                    raise ValueError('Value \'' + str(value) + '\' cannot be converted to any type')
         
+    def __convertToString(self,value):
+        self.logger.trace('Try to convert value \'' + str(value) + '\' to string...')
+        ret = str(value)
+        self.logger.trace('Conversion success.')
+        return ret
+    
+    def __convertToInteger(self,value): 
+        try:
+            self.logger.trace('Try to convert value \'' + str(value) + '\' to integer...')
+            ret = int(value)
+            self.logger.trace('Conversion success.')
+            return ret
+        except ValueError, e:
+            self.logger.trace('Conversion failed.')
+            raise e
         
+    def __convertToBoolean(self,value):
+        self.logger.trace('Try to convert value \'' + str(value) + '\' to boolean...')
+        if str(value).lower() == 'true':
+            self.logger.trace('Conversion success.')
+            return True
+        elif str(value).lower() == 'false':
+            self.logger.trace('Conversion success.')
+            return False
+        else:
+            self.logger.trace('Conversion failed.')
+            raise ValueError('Value \'' + value + '\' cannot be converted to boolean')
+    
